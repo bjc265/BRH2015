@@ -7,8 +7,6 @@ var AWS			 = require('aws-sdk');
 var fileServer = new stat.Server(); 
 var router = new Router();
 
-//loads access keys from config.json
-AWS.config.loadFromPath('./config.json');
 
 var dynamodb = new AWS.DynamoDB();
 
