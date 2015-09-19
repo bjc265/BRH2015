@@ -44,6 +44,7 @@
 
 			<input id="button" type='button' onclick='submitQuery()' value='Random'>
 			<h2 id="title"></h2>
+			<div id="details"></div>
 			<script>
 
 			/*$.getJSON('/list/',function(data){
@@ -51,7 +52,7 @@
 			});*/
 
 					//retrieve catalog info
-					
+
 				function submitQuery(){
 
 					resetDisplay();
@@ -76,6 +77,13 @@
 					    			var parsed = JSON.parse(data);
 					    			var title = parsed.Description;
 					    			$('#title').html(title);
+					    			console.log(parsed);
+
+					    			// Get details
+					    			var freq = parsed.Fields.Value.Frequency;
+					    			var units = parsed.Fields.Value.Units;
+					    			$("#details").html(units + " " + freq);
+					    			
 					    		}
 							});
 			    			generateGraph(parsed);
@@ -110,7 +118,10 @@
 					    },
 					    axis : {
 					    	x : {
-					    		type: 'timeseries'
+					    		type: 'timeseries',
+					    		tick: {
+					                format: '%m/%Y'
+					            }
 					    	}
 					    }
 					});
@@ -119,11 +130,13 @@
 				// Clears display and indicates loading
 				function resetDisplay(){
 					$("#title").html("");
+					$("#details").html("");
 					$("#chart").html("<img src='http://www.simplydevio.us/hack/loading.gif' class='loading-gif'>");
 				}
 				</script>
 
 			<div id="chart"></div>	
+			
 			</div>
 			
 		</body>
