@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>World in Graphs</title>
+	<title>Something Catchy</title>
 	</head>
 <body>
 	<div id="wrapper" class="container">
@@ -11,6 +11,17 @@
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script>
 			function submitQuery(){
+				//retrieve catalog info
+				$.ajax({
+		   			type: 'get',
+		    		url: 'http://localhost:8080/info',
+		    		data: 'ticker=' + encodeURI($('#tickerInput').val()),
+		    		success: function(data, textStatus, jqXHR) {
+		    			$('#wrapper').append('<h3>' + data + '</h3>');
+		    		}
+				});
+
+				//retrieve data
 				$.ajax({
 		   			type: 'get',
 		    		url: 'http://localhost:8080/new',
