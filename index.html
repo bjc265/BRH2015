@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>World in Graphs</title>
+	<title>Something Catchy</title>
 	</head>
 <body>
+	<h1>This is a test.</h1>
 	<div id="wrapper" class="container">
-		<h1>This is a test.</h1>
+		
 		<input id="tickerInput" type='text' placeholder="Ticker">
 		<input type='button' onclick='submitQuery()' value='Request'>
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script>
 			function submitQuery(){
+
+				//retrieve catalog info
+				$.ajax({
+		   			type: 'get',
+		    		url: 'http://localhost:8080/info',
+		    		data: 'ticker=' + encodeURI($('#tickerInput').val()),
+		    		success: function(data, textStatus, jqXHR) {
+		    			$('#wrapper').prepend('<h3>' + data + '</h3>');
+		    		}
+				});
+
+				//retrieve data
 				$.ajax({
 		   			type: 'get',
 		    		url: 'http://localhost:8080/new',
