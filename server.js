@@ -107,7 +107,35 @@ router.get('/info/', function(req, res) {
 	}	
 });
 
+router.get('/list/', function(req, res) {
+	var query = decodeURI(req._parsedUrl.query);
+	var p = {
+		TableName : 'Catalog',
 
+	};
+	if(query.substring(7) === ''){
+		console.log('Received ticker info request with no query, ignoring.');
+		
+	} else if(((query.substring(0,7)) ==="ticker=")==false){
+		console.log('Received bad query "' + query + '", ignoring.');
+		
+	} else {
+		console.log('Received valid info request with query "' + query.substring(7)+'".');
+		dynamodb.scan(p,function(err,data){
+			if(err){
+				console.log(err,err.stack);
+				return;
+			} else{
+				var table = new Array(data.Items.length);
+				for(var i=0;i<data.Items.length;i++){
+					table[i] = data.Items[i].Ticker.S; 
+				}
+				res.writeHead(200, {"Content-Type": 'text/JSON'});
+				res.end(JSON.stringify(table));
+			}
+		});
+	}	
+});
 
 var server = http.createServer(function(req, res) {
   router(req, res, finalhandler(req, res));
