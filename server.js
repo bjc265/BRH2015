@@ -4,7 +4,8 @@ var finalhandler = require('finalhandler'),
 	stat 		 = require('node-static'),
 	AWS			 = require('aws-sdk');
 
-AWS.config.update({region: 'us-east-1'});
+AWS.config.update({ "accessKeyId": "AKIAJABTN4P5HXP5JLHQ", "secretAccessKey": "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", "region": "us-east-1" });
+
 var fileServer = new stat.Server(); 
 var router = new Router();
 

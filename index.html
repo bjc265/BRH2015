@@ -6,13 +6,20 @@
     	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	    <!-- Optional Bootstrap theme -->
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+	    <!-- D3 -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	    
+	    <!-- C3 stuff hosted on my website because it wouldn't work locally >.> -->
+	    <link href="http://www.simplydevio.us/hack/c3.css" rel="stylesheet" type="text/css">
+		<script src="http://www.simplydevio.us/hack/c3.min.js"></script>
 	</head>
 <body>
 	<h1>This is a test.</h1>
 	<div id="wrapper" class="container">
 		
-		<input id="tickerInput" type='text' placeholder="Ticker">
+		<input id="tickerInput" type='text' placeholder="Ticker" value="AULFUNEM Index">
 		<input type='button' onclick='submitQuery($("#tickerInput").val())' value='Request'>
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script>
@@ -33,6 +40,41 @@
 		    			$('#wrapper').prepend('<h3>' + data + '</h3>');
 		    		}
 				});
+
+				//retrieve data
+				$.ajax({
+		   			type: 'get',
+		    		url: 'http://localhost:8080/new',
+		    		data: 'ticker=' + encodeURI($('#tickerInput').val()),
+		    		success: function(data, textStatus, jqXHR) {
+		    			//$('#wrapper').append('<p>' + data + '</p>');
+
+		    			var parsed = JSON.parse(data).Items;
+		    			console.log(parsed);
+		    			var graph_data = [];
+
+		    			for (var i = 0; i < parsed.length; i++){
+		    				var obj = {date: parsed[i].Date, value: parsed[i].Value};
+		    				graph_data.push(obj);
+		    			}
+
+		    			var chart = c3.generate({
+						    data: {
+						        json: graph_data,
+					            keys: {
+									x: 'date', // it's possible to specify 'x' when category axis
+					                x_format: '%Y-%m-%d',
+					                value: ['value'],
+					            }
+						    },
+						    axis : {
+						    	x : {
+						    		type: 'timeseries'
+						    	}
+						    }
+						});
+		    		}
+				});
 				
 				
 
@@ -43,5 +85,6 @@
 			}
 			</script>
 		</div>
+		<div id="chart"></div>
 	</body>
 </html>
