@@ -4,14 +4,23 @@
 	<title>World in Graphs</title>
 	</head>
 <body>
-	<h1>This is a test.</h1>
-	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script>
-		$.ajax({
-    type: 'get',
-    url: 'http://localhost:8080/new',
-    data: 'id=8675309'
-	});
-		</script>
+	<div id="wrapper" class="container">
+		<h1>This is a test.</h1>
+		<input id="tickerInput" type='text' placeholder="Ticker">
+		<input type='button' onclick='submitQuery()' value='Request'>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script>
+			function submitQuery(){
+				$.ajax({
+		   			type: 'get',
+		    		url: 'http://localhost:8080/new',
+		    		data: 'ticker=' + encodeURI($('#tickerInput').val()),
+		    		success: function(data, textStatus, jqXHR) {
+		    			$('#wrapper').append('<p>' + data + '</p>');
+		    		}
+				});
+			}
+			</script>
+		</div>
 	</body>
 </html>
