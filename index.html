@@ -6,17 +6,20 @@
 <body>
 	<div id="wrapper" class="container">
 		<h1>This is a test.</h1>
-
+		<input id="tickerInput" type='text' placeholder="Ticker">
+		<input type='button' onclick='submitQuery()' value='Request'>
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script>
-			$.ajax({
-	   			type: 'get',
-	    		url: 'http://localhost:8080/new',
-	    		data: 'id=8675309',
-	    		success: function(data, textStatus, jqXHR) {
-	    			$('#wrapper').append('<p>' + data.toString() + '</p>');
-	    		}
-			});
+			function submitQuery(){
+				$.ajax({
+		   			type: 'get',
+		    		url: 'http://localhost:8080/new',
+		    		data: 'ticker=' + encodeURI($('#tickerInput').val()),
+		    		success: function(data, textStatus, jqXHR) {
+		    			$('#wrapper').append('<p>' + data + '</p>');
+		    		}
+				});
+			}
 			</script>
 		</div>
 	</body>

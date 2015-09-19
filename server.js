@@ -15,8 +15,9 @@ var year = '2012';
 
 
 function paramsFor(ticker, year){
+	//console.log('Evaluating params for ticker "' + ticker + '" for year ' + year);
 	var params = {
-		TableName : year,
+		TableName : year.toString(),
 		KeyConditionExpression : '#t=:ticker',
 		ExpressionAttributeNames : {
 			'#t' : 'Ticker'
@@ -28,30 +29,61 @@ function paramsFor(ticker, year){
 	return params;
 }
 
+function queryForTicker(ticker, query, res){
+	var table = {};
+	var yearWriting = 2005;
+	for(var year=2005; year<2015; year++){
+		//console.log('Querying for year ' + year.toString());
+		dynamodb.query(paramsFor(query.substring(7),year),function(err, data){
+			if(err){
+				console.log(err, err.stack);
+				return;
+			} else {
+				
+				//console.log(data);
+				
+				table.Count = (table.Count==null) ? data.Count : table.Count + data.Count;
+				table.ScannedCount = (table.ScannedCount==null) ? data.ScannedCount : table.ScannedCount + data.ScannedCount;
+				table.Items = (table.Items==null) ? data.Items : table.Items.concat(data.Items);
+				yearWriting++;
+				
+			}
+
+			if(yearWriting==2015) {
+				console.log('\nFinal Table Data:\n\n' + JSON.stringify(table));
+				var dat = JSON.stringify(table);
+				res.writeHead(200, {"Content-Type": "text/plain"});
+				console.log(dat);
+				res.write(dat);
+				res.end();
+	console.log('Ended response');
+			}
+		});
+	}
+	
+	
+}
+
 
 router.get('/', function (req, res) {
   fileServer.serve(req,res);
 });
- 
+
 
 router.get('/new/', function(req, res) {
-	var query = req._parsedUrl.query;
-	if(query != null){
-		if((query.substring(0,3))==="id="){
-			console.log('Received valid request for new graph that is not: ' + query.substring(3));
-		} else
-			console.log('Received bad query: "' + query + '", ignoring.'); 
-	} else
-		console.log('Received request with no query');
-	dynamodb.query(paramsFor('ACRDBT Index','2005'),function(err, data){
-		console.log("Attempted database query");
-		if(err) console.log(err, err.stack);
-		else {
-			console.log(data);
-			res.writeHead(200, {"Content-Type": "text/plain"});
-			res.end(JSON.stringify(data));
-		}
-	});
+	var query = decodeURI(req._parsedUrl.query);
+	if(query === null){
+		//console.log('Received ticker request with no query, ignoring.');
+		return;
+	} else if(((query.substring(0,7)) ==="ticker=")==false){
+		//console.log('Received bad query "' + query + '", ignoring.');
+		return;
+	} else {
+		
+		queryForTicker(query.substring(7), query, res);
+		
+		
+	}	
 });
 
 
