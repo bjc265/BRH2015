@@ -90,5 +90,5 @@ function generateGraph(parsed){
 function resetDisplay(){
 	$("#title").html("");
 	$("#details").html("");
-	$("#chart").html("<img src='http://www.simplydevio.us/hack/loading.gif' class='loading-gif'>");
+	$("#chart").html("<img src='images/loading.gif' class='loading-gif'>");
 }
