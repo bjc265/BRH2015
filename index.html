@@ -74,19 +74,19 @@
 					    		url: '/info/',
 					    		data: 'ticker=' + encodeURI(index_id),
 					    		success: function(data, textStatus, jqXHR) {
-					    			var parsed = JSON.parse(data);
-					    			var title = parsed.Description;
+					    			var inparsed = JSON.parse(data);
+					    			var title = inparsed.Description;
 					    			$('#title').html(title);
 					    			console.log(parsed);
 
 					    			// Get details
-					    			var freq = parsed.Fields.Value.Frequency;
-					    			var units = parsed.Fields.Value.Units;
-					    			$("#details").html(units + " " + freq);
-					    			
+					    			var freq = inparsed.Fields.Value.Frequency;
+					    			var units = inparsed.Fields.Value.Units;
+					    			$("#details").html((units != null ? units : '') + ' ' + freq);
+					    			generateGraph(parsed);
 					    		}
 							});
-			    			generateGraph(parsed);
+			    			
 			    		}
 					});
 					
@@ -115,6 +115,7 @@
 				                x_format: '%Y-%m-%d',
 				                value: ['value'],
 				            }
+				            
 					    },
 					    axis : {
 					    	x : {
@@ -122,8 +123,14 @@
 					    		tick: {
 					                format: '%m/%Y'
 					            }
+					    	},
+					    	y : {
+					    		label : {
+					    			text : $('#details').html().substring(0,$('#details').html().indexOf(' '))
+					    		}
 					    	}
 					    }
+					    
 					});
 				}
 
