@@ -6,7 +6,7 @@ var finalhandler = require('finalhandler'),
 
 AWS.config.update({ "accessKeyId": "AKIAJABTN4P5HXP5JLHQ", "secretAccessKey": "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", "region": "us-east-1" });
 
-var fileServer = new stat.Server(); 
+var fileServer = new stat.Server('static'); 
 var router = new Router();
 
 
@@ -90,7 +90,13 @@ router.get('/', function (req, res) {
 	fileServer.serve(req,res);
 });
 
+router.get('/js/*', function (req, res) {
+	fileServer.serve(req,res);
+});
 
+router.get('/css/*', function (req, res) {
+	fileServer.serve(req,res);
+});
 
 router.get('/new/', function(req, res) {
 	if(tickerTable == null)
