@@ -1,150 +1,39 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Something Catchy</title>
+		<title>The Data Dump</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	    <!-- Optional Bootstrap theme -->
 	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 
-	    <!-- D3 -->
+	    
 	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 
 	    <!-- C3 stuff hosted on my website because it wouldn't work locally >.> -->
-	    <link href="http://www.simplydevio.us/hack/c3.css" rel="stylesheet" type="text/css">
-		<script src="http://www.simplydevio.us/hack/c3.min.js"></script>
-
-		<style>
-			.container{
-				padding: 50px 30px;
-				text-align: center;
-			}
-
-			#button {
-				background: #2a52a2;
-				border-radius: 3px;
-				padding: 8px 30px;
-				border: none;
-				color: #fff;
-			}
-
-			#title{
-				margin-top: 40px;
-				height: 50px;
-			}
-
-			#chart{
-				text-align: center;
-			}
-		</style>
+	    <link href="css/c3.css" rel="stylesheet" type="text/css">
+		<script src="js/c3.min.js"></script>
+		<link href="css/index.css" rel="stylesheet" type="text/css">
+		<script src='js/index.js'></script>
+		
 	</head>
 	<body>
 		<div id="wrapper" class="container">
-
-			<input id="button" type='button' onclick='submitQuery()' value='Random'>
-			<h2 id="title"></h2>
-			<div id="details"></div>
-			<script>
-
-			/*$.getJSON('/list/',function(data){
-				$('#wrapper').append(JSON.stringify(data));
-			});*/
-
-					//retrieve catalog info
-
-				function submitQuery(){
-
-					resetDisplay();
-
-					//retrieve data
-					$.ajax({
-			   			type: 'get',
-			    		url: 'http://localhost:8080/new',
-			    		success: function(data, textStatus, jqXHR) {
-			    			//$('#wrapper').append('<p>' + data + '</p>');
-			    			var parsed = JSON.parse(data).Items;
-
-			    			// ie COWSTOTT Index
-			    			var index_id = parsed[0].Ticker;
-
-			    			// Get table description
-			    			$.ajax({
-					   			type: 'get',
-					    		url: '/info/',
-					    		data: 'ticker=' + encodeURI(index_id),
-					    		success: function(data, textStatus, jqXHR) {
-					    			var inparsed = JSON.parse(data);
-					    			var title = inparsed.Description;
-					    			$('#title').html(title);
-					    			console.log(parsed);
-
-					    			// Get details
-					    			var freq = inparsed.Fields.Value.Frequency;
-					    			var units = inparsed.Fields.Value.Units;
-					    			$("#details").html((units != null ? units : '') + ' ' + freq);
-					    			generateGraph(parsed);
-					    		}
-							});
-			    			
-			    		}
-					});
-					
-
-					//retrieve data
-					/*$.getJSON('/new/', function(data){
-						$('#wrapper').append(JSON.stringify(data));
-					});*/
-				}
-
-				// Creates the c3 graph
-				function generateGraph(parsed){
-					
-	    			var graph_data = [];
-
-	    			for (var i = 0; i < parsed.length; i++){
-	    				var obj = {date: parsed[i].Date, value: parsed[i].Value};
-	    				graph_data.push(obj);
-	    			}
-
-	    			var chart = c3.generate({
-					    data: {
-					        json: graph_data,
-				            keys: {
-								x: 'date', // it's possible to specify 'x' when category axis
-				                x_format: '%Y-%m-%d',
-				                value: ['value'],
-				            }
-				            
-					    },
-					    axis : {
-					    	x : {
-					    		type: 'timeseries',
-					    		tick: {
-					                format: '%m/%Y'
-					            }
-					    	},
-					    	y : {
-					    		label : {
-					    			text : $('#details').html().substring(0,$('#details').html().indexOf(' '))
-					    		}
-					    	}
-					    }
-					    
-					});
-				}
-
-				// Clears display and indicates loading
-				function resetDisplay(){
-					$("#title").html("");
-					$("#details").html("");
-					$("#chart").html("<img src='http://www.simplydevio.us/hack/loading.gif' class='loading-gif'>");
-				}
-				</script>
-
-			<div id="chart"></div>	
+			<h1 class="title"><strong>The Data Dump</strong><img src="http://findicons.com/files/icons/1580/devine_icons_part_2/128/trash_recyclebin_empty_closed.png" height="96" width="96"></h1>
+			<input id="button" type='button' onclick='submitQuery()' value='Bring me Something New!'>
+			<h2 id="title" class="sectitle"></h2>
+			<div id="details" class="hide"></div>
 			
+
+			<div id="chart" class = "text-center">
+				<h2>Learn just how beautiful data can be.</h2>
+				<h4>Click the button above to pull a random table of data from a vast database of world statistics.</h4>
+			</div>	
 			</div>
-			
+		<footer class='footer'>
+			<div class="container text-center">
+				<h4>Data courteously provided by Bloomberg Finance LP. All Rights Reserved.</h5>
+				<h4>Project for <a href='http://www.bigredhacks.com/'>Big Red Hacks 2015</a>.
 		</body>
 	</html>
