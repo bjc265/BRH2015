@@ -98,6 +98,10 @@ router.get('/css/*', function (req, res) {
 	fileServer.serve(req,res);
 });
 
+router.get('/images/*', function(req, res) {
+	fileServer.serve(req,res);
+});
+
 router.get('/new/', function(req, res) {
 	if(tickerTable == null)
 		loadTickerTable(function(err){
